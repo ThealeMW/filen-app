@@ -7,6 +7,76 @@ export async function updateUserKeys(){
         return false
     }
 
+    const updateUserKeypair = async (pub, priv, callback) => {
+        try{
+            var res = await utils.apiRequest("POST", "/v1/user/keyPair/update", {
+                apiKey: this.state.userAPIKey,
+                publicKey: pub,
+                privateKey: utils.cryptoJSEncrypt(priv, this.state.userMasterKeys[this.state.userMasterKeys.length - 1])
+            })
+        }
+        catch(e){
+            if(typeof callback == "function"){
+                return callback(e)
+            }
+
+            console.log(e)
+
+            return false
+        }
+
+        if(!res.status){
+            if(typeof callback == "function"){
+                return callback(res.message)
+            }
+
+            console.log(res.message)
+
+            return false
+        }
+
+        if(typeof callback == "function"){
+            return callback(null, true)
+        }
+
+        return true
+    }
+
+    const setUserKeypair = async (pub, priv, callback) => {
+        try{
+            var res = await utils.apiRequest("POST", "/v1/user/keyPair/set", {
+                apiKey: this.state.userAPIKey,
+                publicKey: pub,
+                privateKey: utils.cryptoJSEncrypt(priv, this.state.userMasterKeys[this.state.userMasterKeys.length - 1])
+            })
+        }
+        catch(e){
+            if(typeof callback == "function"){
+                return callback(e)
+            }
+
+            console.log(e)
+
+            return false
+        }
+
+        if(!res.status){
+            if(typeof callback == "function"){
+                return callback(res.message)
+            }
+
+            console.log(res.message)
+
+            return false
+        }
+
+        if(typeof callback == "function"){
+            return callback(null, true)
+        }
+
+        return true
+    }
+
     const updatePubAndPrivKey = async () => {
         try{
             var res = await utils.apiRequest("POST", "/v1/user/keyPair/info", {
@@ -52,10 +122,50 @@ export async function updateUserKeys(){
                     userPrivateKey: privKey
                 })
 
-                return console.log("Public and private key updated.")
+                console.log("Public and private key updated.")
+
+                return updateUserKeypair(res.data.publicKey, privKey, (err) => {
+                    if(err){
+                        return console.log(err)
+                    }
+
+                    return console.log("User keypair updated.")
+                })
             }
             else{
                 return console.log("Could not decrypt private key")
+            }
+        }
+        else{
+            try{
+                let generatedKeypair = await window.crypto.subtle.generateKey({
+                    name: "RSA-OAEP",
+                    modulusLength: 4096,
+                    publicExponent: new Uint8Array([1, 0, 1]),
+                    hash: "SHA-512"
+                }, true, ["encrypt", "decrypt"])
+
+                let exportedPubKey = await window.crypto.subtle.exportKey("spki", generatedKeypair.publicKey)
+                let b64PubKey = utils.base64ArrayBuffer(exportedPubKey)
+
+                let exportedPrivKey = await window.crypto.subtle.exportKey("pkcs8", generatedKeypair.privateKey)
+                let b64PrivKey = utils.base64ArrayBuffer(exportedPrivKey)
+
+                if(b64PubKey.length > 16 && b64PrivKey.length > 16){
+                    setUserKeypair(b64PubKey, b64PrivKey, (err) => {
+                        if(err){
+                            return console.log(err)
+                        }
+
+                        return console.log("User keypair generated and updated.")
+                    })
+                }
+                else{
+                    return console.log("Key lengths invalid")
+                }
+            }
+            catch(e){
+                return console.log(e)
             }
         }
     }

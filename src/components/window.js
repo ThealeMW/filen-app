@@ -234,6 +234,9 @@ export function setupWindowFunctions(){
             })
         }
         catch(e){
+            document.getElementById("login-password").value = ""
+            document.getElementById("login-2fa").value = ""
+
             console.log(e)
 
             window.customFunctions.dismissLoader()
@@ -249,6 +252,9 @@ export function setupWindowFunctions(){
         }
 
         if(!res.status){
+            document.getElementById("login-password").value = ""
+            document.getElementById("login-2fa").value = ""
+
             window.customFunctions.dismissLoader()
 
             let alert = await alertController.create({
@@ -269,6 +275,115 @@ export function setupWindowFunctions(){
         window.customFunctions.dismissLoader(true)
         window.customFunctions.dismissModal(true)
 
+        window.customFunctions.dismissLoader()
+
+        document.getElementById("login-email").value = ""
+        document.getElementById("login-password").value = ""
+        document.getElementById("login-2fa").value = ""
+
         return this.doSetup()
+    }
+
+    window.customFunctions.doRegister = async () => {
+        let email = document.getElementById("register-email").value
+        let password = document.getElementById("register-password").value
+        let passwordRepeat = document.getElementById("register-password-repeat").value
+
+        if(!email || !password || !passwordRepeat){
+            let alert = await alertController.create({
+                header: "",
+                subHeader: "",
+                message: language.get(this.state.lang, "registerInvalidInputs"),
+                buttons: [language.get(this.state.lang, "alertOkButton").toUpperCase()]
+            })
+
+            return alert.present()
+        }
+
+        let loading = await loadingController.create({
+            message: ""
+        })
+    
+        loading.present()
+
+        try{
+            var res = await utils.apiRequest("POST", "/v1/register", {
+                email,
+                password,
+                passwordRepeat
+            })
+        }
+        catch(e){
+            document.getElementById("register-password").value = ""
+            document.getElementById("register-password-repeat").value = ""
+
+            console.log(e)
+
+            window.customFunctions.dismissLoader()
+
+            let alert = await alertController.create({
+                header: "",
+                subHeader: "",
+                message: language.get(this.state.lang, "apiRequestError"),
+                buttons: [language.get(this.state.lang, "alertOkButton").toUpperCase()]
+            })
+
+            return alert.present()
+        }
+
+        if(!res.status){
+            document.getElementById("register-password").value = ""
+            document.getElementById("register-password-repeat").value = ""
+
+            window.customFunctions.dismissLoader()
+
+            let message = ""
+
+            if(res.message.toLowerCase().indexOf("invalid email") !== -1 || res.message.toLowerCase().indexOf("invalid password") !== -1 || res.message.toLowerCase().indexOf("invalid email") !== -1){
+                message = language.get(this.state.lang, "registerInvalidFields")
+            }
+            else if(res.message.toLowerCase().indexOf("your password needs to be at least 10 characters long") !== -1){
+                message = language.get(this.state.lang, "registerPasswordAtLeast10Chars")
+            }
+            else if(res.message.toLowerCase().indexOf("passwords do not match") !== -1){
+                message = language.get(this.state.lang, "registerPasswordsDoNotMatch")
+            }
+            else if(res.message.toLowerCase().indexOf("invalid email") !== -1){
+                message = language.get(this.state.lang, "registerInvalidEmail")
+            }
+            else if(res.message.toLowerCase().indexOf("database error") !== -1){
+                message = language.get(this.state.lang, "apiRequestError")
+            }
+            else if(res.message.toLowerCase().indexOf("this email is already registered") !== -1){
+                message = language.get(this.state.lang, "registerEmailAlreadyRegistered")
+            }
+            else if(res.message.toLowerCase().indexOf("we could not send an email at this time, please try again later") !== -1){
+                message = language.get(this.state.lang, "registerCouldNotSendEmail")
+            }
+
+            let alert = await alertController.create({
+                header: "",
+                subHeader: "",
+                message: message,
+                buttons: [language.get(this.state.lang, "alertOkButton").toUpperCase()]
+            })
+
+            return alert.present()
+        }
+
+        document.getElementById("register-email").value = ""
+        document.getElementById("register-password").value = ""
+        document.getElementById("register-password-repeat").value = ""
+
+        window.customFunctions.dismissLoader()
+
+        let alert = await alertController.create({
+            header: "",
+            subHeader: "",
+            message: language.get(this.state.lang, "registerSuccess"),
+            buttons: [language.get(this.state.lang, "alertOkButton").toUpperCase()]
+        })
+
+        return alert.present()
     }
 }

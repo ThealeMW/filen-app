@@ -25,20 +25,20 @@ export async function showRegister(){
                         <center>
                             <h1>Filen</h1>
                             <ion-item style="width: 90%; margin-top: 30px;">
-                                <ion-input type="text" id="register-email" placeholder="Email"></ion-input>
+                                <ion-input type="text" id="register-email" placeholder="` + language.get(appLang, "emailPlaceholder") + `"></ion-input>
                             </ion-item>
                             <ion-item style="width: 90%;">
-                                <ion-input type="password" id="register-password" placeholder="Password"></ion-input>
+                                <ion-input type="password" id="register-password" placeholder="` + language.get(appLang, "passwordPlaceholder") + `"></ion-input>
                             </ion-item>
                             <ion-item style="width: 90%;">
-                                <ion-input type="number" id="register-2fa" placeholder="2FA code (leave empty if disabled)"></ion-input>
+                                <ion-input type="password" id="register-password-repeat" placeholder="` + language.get(appLang, "passwordRepeatPlaceholder") + `"></ion-input>
                             </ion-item>
-                            <ion-button expand="block" style="width: 90%; margin-top: 50px;">Block Button</ion-button>
+                            <ion-button expand="block" style="width: 90%; margin-top: 50px;" onClick="window.customFunctions.doRegister()">` + language.get(appLang, "registerButton") + `</ion-button>
                             <br>
                             OR
                             <br>
                             <br>
-                            <a onClick="window.customFunctions.openRegisterModal()">Create an account</a>
+                            <a onClick="window.customFunctions.dismissModal()">` + language.get(appLang, "loginLink") + `</a>
                         </center>
                     </div>
                 </ion-content>

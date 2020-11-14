@@ -37,9 +37,10 @@ interface AppStates {
 	windowHeight: number,
 	windowWidth: number,
 	mainSearchTerm: string,
-	oldItemList: Array<any>,
 	lang: string,
-	showMainToolbarBackButton: boolean
+	showMainToolbarBackButton: boolean,
+	transferBadeShowing: boolean,
+	transferBadeCount: number
 }
 
 export default class App extends React.PureComponent<{}, AppStates> {
@@ -58,14 +59,15 @@ export default class App extends React.PureComponent<{}, AppStates> {
 			currentHref: window.location.href,
 			darkMode: false,
 			userEmail: "testnet@filen.io",
-			userStorageUsagePercentage: 0.5,
+			userStorageUsagePercentage: 0,
 			searchbarOpen: false,
 			windowHeight: window.innerHeight,
 			windowWidth: window.innerWidth,
 			mainSearchTerm: "",
-			oldItemList: [],
 			lang: "en",
-			showMainToolbarBackButton: false
+			showMainToolbarBackButton: false,
+			transferBadeShowing: false,
+			transferBadeCount: 0
 		}
 
 		this.componentDidMount = this.componentDidMount.bind(this)

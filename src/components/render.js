@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonSearchbar, IonAvatar, IonProgressBar, IonBackButton, IonRefresher, IonRefresherContent, IonFab, IonFabButton, IonFabList, IonCheckbox, IonRippleEffect, IonIcon, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonThumbnail, IonImg, IonApp, IonModal, IonButton, IonMenu, IonMenuButton, IonButtons, IonText } from '@ionic/react'
+import { IonSearchbar, IonAvatar, IonProgressBar, IonBadge, IonBackButton, IonRefresher, IonRefresherContent, IonFab, IonFabButton, IonFabList, IonCheckbox, IonRippleEffect, IonIcon, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonThumbnail, IonImg, IonApp, IonModal, IonButton, IonMenu, IonMenuButton, IonButtons, IonText } from '@ionic/react'
 import { List } from 'react-virtualized';
 
 import '@ionic/react/css/core.css';
@@ -172,6 +172,18 @@ export function render(){
                         <IonIcon slot="icon-only" icon={Ionicons.search} />
                     </IonButton>
                     <IonMenuButton menu="transfersMenu">
+                        {
+                            this.state.transferBadeShowing && (
+                                <IonBadge style={{
+                                    position: "absolute",
+                                    borderRadius: "50%",
+                                    marginTop: "-8px",
+                                    marginLeft: "10px",
+                                    zIndex: "1001",
+                                    fontSize: "7pt"
+                                }}>99</IonBadge>
+                            )
+                        }
                         <IonIcon icon={Ionicons.repeatOutline} />
                     </IonMenuButton>
                     <IonButton onClick={this.mainMenuPopover}>

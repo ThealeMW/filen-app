@@ -135,11 +135,18 @@ export async function doSetup(){
     }
 
     this.updateUserKeys()
+    this.updateUserUsage()
 
     clearInterval(window.customVariables.keyUpdateInterval)
 
     window.customVariables.keyUpdateInterval = setInterval(() => {
         this.updateUserKeys()
+    }, 60000)
+
+    clearInterval(window.customVariables.usageUpdateInterval)
+
+    window.customVariables.usageUpdateInterval = setInterval(() => {
+        this.updateUserUsage()
     }, 60000)
 
     return this.routeTo("/base")

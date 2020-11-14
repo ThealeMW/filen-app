@@ -220,3 +220,33 @@ export async function updateUserKeys(){
 
     return updatePubAndPrivKey()
 }
+
+export async function updateUserUsage(){
+    if(!this.state.isLoggedIn){
+        return false
+    }
+
+    try{
+        var res = await utils.apiRequest("POST", "/v1/user/usage", {
+            apiKey: this.state.userAPIKey
+        })
+    }
+    catch(e){
+        return console.log(e)
+    }
+
+    if(!res.status){
+        console.log(res.message)
+
+        return false
+    }
+
+    let storageUsedPercent = ((res.data.storage / res.data.max) * 100).toFixed(2)
+
+    return this.setState({
+        userStorageUsagePercentage: storageUsedPercent,
+        userStorageUsageMenuText: language.get("en", "userStorageUsageMenuText", false, ["__MAX__", "__PERCENTAGE__"], [utils.formatBytes(res.data.max), storageUsedPercent]),
+		userCurrentStorageUsage: res.data.storage,
+		userMaxStorage: res.data.max
+    })
+}

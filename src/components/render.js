@@ -226,6 +226,37 @@ export function render(){
                             <br />
                             <br />
                             <IonProgressBar value={this.state.userStorageUsagePercentage}></IonProgressBar>
+                            <div style={{
+                                width: "100%",
+                                color: this.state.darkMode ? "white" : "black",
+                                marginTop: "10px"
+                            }}>
+                                <div style={{
+                                    float: "left",
+                                    fontSize: "10pt"
+                                }}>
+                                    {this.state.userStorageUsageMenuText}
+                                </div>
+                                <div style={{
+                                    float: "right"
+                                }}>
+                                    {
+                                        this.state.userMaxStorage < 107374182400 && (
+                                            <div>
+                                                <IonBadge button onClick={() => {
+                                                    window.open("https://filen.io/pro", "_system")
+                                                    
+                                                    return false
+                                                }} color="primary" style={{
+                                                    fontSize: "7pt"
+                                                }}>
+                                                    {language.get(this.state.lang, "goProBadge")}
+                                                </IonBadge>
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                            </div>
                         </IonHeader>
                         <IonContent>
                             <IonList>

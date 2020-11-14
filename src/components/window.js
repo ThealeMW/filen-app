@@ -2,6 +2,7 @@ import { Plugins } from "@capacitor/core"
 import { modalController, popoverController, menuController, alertController, loadingController, actionSheetController } from "@ionic/core"
 import * as language from "../utils/language"
 import * as utils from "../utils/utils"
+import * as Ionicons from 'ionicons/icons';
 
 export function windowRouter(){
     window.onhashchange = async () => {
@@ -57,7 +58,8 @@ export function setupWindowFunctions(){
     window.customVariables.cachedFolders = {}
     window.customVariables.cachedFiles = {}
     window.customVariables.keyUpdateInterval = undefined
-    
+    window.customVariables.usageUpdateInterval = undefined
+
     window.onresize = () => {
         this.setState({
             windowHeight: window.innerHeight,
@@ -385,5 +387,116 @@ export function setupWindowFunctions(){
         })
 
         return alert.present()
+    }
+
+    window.customFunctions.openSettingsModal = async () => {
+        let appLang = this.state.lang
+        let modalId = "settings-modal-" + utils.generateRandomClassName()
+
+        customElements.define(modalId, class ModalContent extends HTMLElement {
+            connectedCallback(){
+                this.innerHTML = `
+                    <ion-header>
+                        <ion-toolbar>
+                            <ion-buttons slot="start">
+                                <ion-button onClick="window.customFunctions.dismissModal()">
+                                    <ion-icon slot="icon-only" icon="` + Ionicons.arrowBack + `"></ion-icon>
+                                </ion-button>
+                            </ion-buttons>
+                            <ion-title>
+                                ` + language.get(appLang, "settings") + `
+                            </ion-title>
+                        </ion-toolbar>
+                    </ion-header>
+                    <ion-content fullscreen>
+                        settings
+                    </ion-content>
+                `
+            }
+        })
+
+        let modal = await modalController.create({
+            component: modalId,
+            swipeToClose: true,
+            showBackdrop: false,
+            backdropDismiss: false,
+            cssClass: "modal-fullscreen"
+        })
+
+        modal.present()
+    }
+
+    window.customFunctions.openEncryptionModal = async () => {
+        let appLang = this.state.lang
+        let modalId = "encryption-modal-" + utils.generateRandomClassName()
+
+        customElements.define(modalId, class ModalContent extends HTMLElement {
+            connectedCallback(){
+                this.innerHTML = `
+                    <ion-header>
+                        <ion-toolbar>
+                            <ion-buttons slot="start">
+                                <ion-button onClick="window.customFunctions.dismissModal()">
+                                    <ion-icon slot="icon-only" icon="` + Ionicons.arrowBack + `"></ion-icon>
+                                </ion-button>
+                            </ion-buttons>
+                            <ion-title>
+                                ` + language.get(appLang, "encryption") + `
+                            </ion-title>
+                        </ion-toolbar>
+                    </ion-header>
+                    <ion-content fullscreen>
+                        encryption
+                    </ion-content>
+                `
+            }
+        })
+
+        let modal = await modalController.create({
+            component: modalId,
+            swipeToClose: true,
+            showBackdrop: false,
+            backdropDismiss: false,
+            cssClass: "modal-fullscreen"
+        })
+
+        modal.present()
+    }
+
+    window.customFunctions.openHelpModal = async () => {
+        let appLang = this.state.lang
+        let modalId = "help-modal-" + utils.generateRandomClassName()
+
+        customElements.define(modalId, class ModalContent extends HTMLElement {
+            connectedCallback(){
+                this.innerHTML = `
+                    <ion-header>
+                        <ion-toolbar>
+                            <ion-buttons slot="start">
+                                <ion-button onClick="window.customFunctions.dismissModal()">
+                                    <ion-icon slot="icon-only" icon="` + Ionicons.arrowBack + `"></ion-icon>
+                                </ion-button>
+                            </ion-buttons>
+                            <ion-title>
+                                ` + language.get(appLang, "help") + `
+                            </ion-title>
+                        </ion-toolbar>
+                    </ion-header>
+                    <ion-content fullscreen>
+                        help
+                    </ion-content>
+                `
+            }
+        })
+
+        let modal = await modalController.create({
+            component: modalId,
+            swipeToClose: true,
+            showBackdrop: false,
+            backdropDismiss: false,
+            cssClass: "modal-fullscreen"
+        })
+
+        modal.present()
     }
 }

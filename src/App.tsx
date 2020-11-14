@@ -10,6 +10,8 @@ import * as searchComponents from "./components/search"
 import * as renderComponents from "./components/render"
 import * as registerComponents from "./components/register"
 import * as userComponents from "./components/user"
+import * as utils from "./utils/utils"
+import * as language from "./utils/language"
 
 declare global {
     interface Window {
@@ -40,7 +42,11 @@ interface AppStates {
 	lang: string,
 	showMainToolbarBackButton: boolean,
 	transferBadeShowing: boolean,
-	transferBadeCount: number
+	transferBadeCount: number,
+	userStorageUsageMenuText: string,
+	userCurrentStorageUsage: number,
+	userMaxStorage: number,
+	currentReceiverId: number
 }
 
 export default class App extends React.PureComponent<{}, AppStates> {
@@ -67,7 +73,11 @@ export default class App extends React.PureComponent<{}, AppStates> {
 			lang: "en",
 			showMainToolbarBackButton: false,
 			transferBadeShowing: false,
-			transferBadeCount: 0
+			transferBadeCount: 0,
+			userStorageUsageMenuText: language.get("en", "userStorageUsageMenuText", false, ["__MAX__", "__PERCENTAGE__"], [utils.formatBytes(0), 0]),
+			userCurrentStorageUsage: 0,
+			userMaxStorage: 0,
+			currentReceiverId: 0
 		}
 
 		this.componentDidMount = this.componentDidMount.bind(this)
@@ -98,6 +108,7 @@ export default class App extends React.PureComponent<{}, AppStates> {
 	showRegister = registerComponents.showRegister.bind(this)
 
 	updateUserKeys = userComponents.updateUserKeys.bind(this)
+	updateUserUsage = userComponents.updateUserUsage.bind(this)
 
     updateItemList = itemsComponents.updateItemList.bind(this)
 	refreshMainList = itemsComponents.refreshMainList.bind(this)

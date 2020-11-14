@@ -4,7 +4,8 @@ export function routeTo(route){
 
 export function routeToFolder(folder){
     this.setState({
-        mainToolbarTitle: folder.name
+        mainToolbarTitle: folder.name,
+        currentReceiverId: folder.receiverId
     })
 
     window.customVariables.cachedFolders[folder.uuid] = folder
